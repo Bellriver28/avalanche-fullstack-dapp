@@ -2,8 +2,12 @@
 pragma solidity ^0.8.20;
 contract SimpleStorage {
     uint256 private storedValue;
-
+    address public owner;
     event ValueUpdated(uint256 newValue);
+
+    constructor(){
+    owner = msg.sender;
+    }
 
     function setValue(uint256 _value) public {
         storedValue = _value;
