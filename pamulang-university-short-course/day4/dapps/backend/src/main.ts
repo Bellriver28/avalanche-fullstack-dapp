@@ -11,7 +11,8 @@ async function bootstrap() {
       The Simple Storage dApp API description
       Nama : Muhammad Rivaldi Bachtiar
       NIM  : 231011400482
-      `)    .setVersion('1.0')
+      `)    
+    .setVersion('1.0')
     .addTag('simple-storage')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
