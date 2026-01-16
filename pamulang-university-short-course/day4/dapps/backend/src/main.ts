@@ -7,8 +7,11 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Simple Storage dApp API')
-    .setDescription('The Simple Storage dApp API description')
-    .setVersion('1.0')
+    .setDescription(`
+      The Simple Storage dApp API description
+      Nama : Muhammad Rivaldi Bachtiar
+      NIM  : 231011400482
+      `)    .setVersion('1.0')
     .addTag('simple-storage')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
