@@ -1,173 +1,33 @@
-'use client';
-
-import { useState } from 'react';
+import Dapp from "@/components/Dapp";
 import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useReadContract,
-  useWriteContract,
-} from 'wagmi';
-import { injected } from 'wagmi/connectors';
-import { parseEther } from 'ethers';
+  getBlockchainValue,
+  getBlockchainEvents,
+} from "@/services/blockchain.service";
 
-// ==============================
-// 🔹 CONFIG
-// ==============================
+export default async function HomePage() {
+  const value = await getBlockchainValue();
+  const events = await getBlockchainEvents();
 
-// 👉 GANTI dengan contract address hasil deploy kamu day 2
-const CONTRACT_ADDRESS = '0x6cdd17e67679650bb637345f9511a8f4b703a0d3';
-
-// 👉 ABI SIMPLE STORAGE
-const SIMPLE_STORAGE_ABI = [
-  {
-    inputs: [],
-    name: 'getValue',
-    outputs: [{ type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ name: '_value', type: 'uint256' }],
-    name: 'setValue',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-];
-
-export default function Page() {
-  // ==============================
-  // 🔹 WALLET STATE
-  // ==============================
-  const { address, isConnected } = useAccount();
-  const { connect, isPending: isConnecting } = useConnect();
-  const { disconnect } = useDisconnect();
-
-  // ==============================
-  // 🔹 LOCAL STATE
-  // ==============================
-  const [inputValue, setInputValue] = useState('');
-
-  // ==============================
-  // 🔹 READ CONTRACT
-  // ==============================
-  const {
-    data: value,
-    isLoading: isReading,
-    refetch,
-  } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: SIMPLE_STORAGE_ABI,
-    functionName: 'getValue',
-  });
-
-  // ==============================
-  // 🔹 WRITE CONTRACT
-  // ==============================
-  const {
-    writeContract,
-    isPending: isWriting,
-  } = useWriteContract();
-
-  const handleSetValue = async () => {
-    if (!inputValue) return;
-
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: SIMPLE_STORAGE_ABI,
-      functionName: 'setValue',
-      args: [BigInt(inputValue)],
-    });
-  };
-
-  // ==============================
-  // 🔹 UI
-  // ==============================
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="w-full max-w-md border border-gray-700 rounded-lg p-6 space-y-6">
+    <main className="p-6 space-y-6 bg-black min-h-screen text-white">
+      <h1 className="text-xl font-bold">Blockchain Data (Server)</h1>
 
-        <h1 className="text-xl font-bold">
-          Day 3 – Frontend dApp (Avalanche)
-        </h1>
+      <section>
+        <h2 className="font-semibold">Latest Value</h2>
+        <pre className="text-xs bg-gray-900 p-3 rounded">
+          {JSON.stringify(value, null, 2)}
+        </pre>
+      </section>
 
-        {/* ==========================
-            WALLET CONNECT
-        ========================== */}
-        {!isConnected ? (
-          <button
-            onClick={() => connect({ connector: injected() })}
-            disabled={isConnecting}
-            className="w-full bg-white text-black py-2 rounded">
-            {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-          </button>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-sm text-gray-400">Connected Address</p>
-            <p className="font-mono text-xs break-all">{address?.slice(0, 6)}...{address?.slice(-4)}</p>
+      <section>
+        <h2 className="font-semibold">Events</h2>
+        <pre className="text-xs bg-gray-900 p-3 rounded">
+          {JSON.stringify(events, null, 2)}
+        </pre>
+      </section>
 
-            <button
-              onClick={() => disconnect()}
-              className="text-red-400 text-sm underline"
-            >
-              Disconnect
-            </button>
-          </div>
-        )}
-
-        {/* ==========================
-            READ CONTRACT
-        ========================== */}
-        <div className="border-t border-gray-700 pt-4 space-y-2">
-          <p className="text-sm text-gray-400">Contract Value (read)</p>
-
-          {isReading ? (
-            <p>Loading...</p>
-          ) : (
-            <p className="text-2xl font-bold">{value?.toString()}</p>
-          )}
-
-          <button
-            onClick={() => refetch()}
-            className="text-sm underline text-gray-300"
-          >
-            Refresh value
-          </button>
-        </div>
-
-        {/* ==========================
-            WRITE CONTRACT
-        ========================== */}
-        <div className="border-t border-gray-700 pt-4 space-y-3">
-          <p className="text-sm text-gray-400">Update Contract Value</p>
-
-          <input
-            type="number"
-            placeholder="New value"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-full p-2 rounded bg-black border border-gray-600"
-          />
-
-          <button
-            onClick={handleSetValue}
-            disabled={isWriting}
-            className="w-full bg-blue-600 py-2 rounded disabled:opacity-50"
-
-          >
-            {isWriting ? 'Updating...' : 'Set Value'}
-          </button>
-        </div>
-
-        {/* ==========================
-            FOOTNOTE
-        ========================== */}
-        <p className="text-xs text-gray-500 pt-2">
-          Smart contract = single source of truth
-        </p>
-
-      </div>
+      {/* Client dApp */}
+      <Dapp />
     </main>
   );
 }
