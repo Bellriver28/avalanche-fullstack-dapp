@@ -12,16 +12,18 @@ export class BlockchainController {
       return this.blockchainService.getLatestValue();
     }
 
-    // GET /blockchain/events
+    // POST /blockchain/events -> fetch by fromBlock/toBlock
     @Post("events")
-    async getEvents(@Body() body: GetEventsDto) {
+    async getEventsByRange(@Body() body: GetEventsDto) {
       return this.blockchainService.getValueUpdatedEvents(body.fromBlock, body.toBlock);
     }
-
+  
+    // GET /blockchain/events -> fetch last 1000 blocks by default
     @Get('events')
     async getEvents() {
       return this.blockchainService.getValueUpdatedEvents(50560286, 50560663);
     }
 
 }
+
 
