@@ -22,7 +22,7 @@ export default async function HomePage() {
 
       {/* Client Component */}
       <section className="bg-gray-900 p-4 rounded shadow">
-        <h2 className="font-semibold">Change Value (Client)</h2>
+        <h2 className="font-semibold">Latest Value (Client)</h2>
         <BlockchainValue />
       </section>
     </main>
