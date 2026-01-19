@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBlockchainValue } from "../../src/services/blockchain.service";
+import { getBlockchainValue } from "../../../src/services/blockchain.service";
 import Link from "next/link";
 
 export default function Dapp() {
