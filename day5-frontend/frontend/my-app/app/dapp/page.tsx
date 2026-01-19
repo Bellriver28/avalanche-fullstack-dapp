@@ -1,4 +1,4 @@
-import Dapp from "@/app/component/Dapp";
+import Dapp from "../component/Dapp";
 
 export default function DappPage() {
   return (
