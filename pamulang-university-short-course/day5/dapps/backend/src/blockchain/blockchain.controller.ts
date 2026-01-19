@@ -18,4 +18,10 @@ export class BlockchainController {
       return this.blockchainService.getValueUpdatedEvents(body.fromBlock, body.toBlock);
     }
 
+    @Get('events')
+    async getEvents() {
+      return this.blockchainService.getValueUpdatedEvents(50560286, 50560663);
+    }
+
 }
+
